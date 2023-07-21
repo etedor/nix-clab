@@ -1,0 +1,14 @@
+# Ignore these directories
+.direnv/
+.etc/
+.templates/
+
+# Ignore files in these specific directories
+/images/*
+!/images/.gitkeep
+/topos/*
+!/topos/.gitkeep
+
+# Ignore non-example templates
+/templates/*
+!/templates/*.example.tmpl

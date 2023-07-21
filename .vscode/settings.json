@@ -1,0 +1,12 @@
+{
+    "terminal.integrated.profiles.linux": {
+        "clab": {
+            "path": "bash",
+            "args": [
+                "-rcfile",
+                ".bashrc"
+            ]
+        }
+    },
+    "terminal.integrated.defaultProfile.linux": "clab"
+}

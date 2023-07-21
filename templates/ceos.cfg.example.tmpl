@@ -1,0 +1,42 @@
+!
+no aaa root
+!
+username admin privilege 15 secret admin
+!
+hostname {{ .ShortName }}
+ip name-server vrf MGMT 192.0.2.53
+ip name-server vrf MGMT 2001:db8::53
+dns domain lab.example.com
+ip domain-list lab.example.com
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvcompression=gzip -cvvrf=MGMT -taillogs -cvauth=token-secure,/mnt/flash/persist/cv-onboarding-token -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -cvgnmi
+   no shutdown
+!
+service routing protocols model multi-agent
+!
+clock timezone UTC
+!
+vrf instance MGMT
+!
+interface Management0
+   description {{ .ShortName }} Ma0
+   vrf MGMT
+{{ if .MgmtIPv4Address }}   ip address {{ .MgmtIPv4Address }}/{{ .MgmtIPv4PrefixLength }}{{end}}
+{{ if .MgmtIPv6Address }}   ipv6 address {{ .MgmtIPv6Address }}/{{ .MgmtIPv6PrefixLength }}{{end}}
+!
+no ip routing vrf MGMT
+!
+ip route vrf MGMT 0.0.0.0/0 {{ .MgmtIPv4Gateway }}
+!
+management api http-commands
+   protocol https
+   shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+ntp server vrf MGMT 192.0.2.123 prefer iburst
+!
+end
+!
